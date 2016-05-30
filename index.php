@@ -1,42 +1,60 @@
-<?php get_header()?>
+<?php get_header(); ?>
     
     <section id="about" class="s_about bg_light">
         <div class="section_header">
-            <h2>Обо мне</h2>
+            <h2><?php
+                $idObj = get_category_by_slug('s_about');
+                $id = $idObj->term_id;
+                echo get_cat_name($id);
+            ?></h2>
             <div class="s_descr_wrapper">
-                <div class="s_descr">Познакомимся ближе</div>
+                <div class="s_descr"><?php echo category_description(2)?></div>
             </div>
         </div>
         <div class="section_content">
             <div class="container">
                 <div class="row">
+                    
+                    <?php if ( have_posts() ) : query_posts('p=4');
+                        while (have_posts()) : the_post(); ?>
                     <div class="col-md-4 col-md-push-4 animation_1">
                         <h3>Фото</h3>
                         <div class="person">
-                            <a href="img/photo.jpg" class="popup"><img src="img/photo.jpg" alt=""></a>
+                            <?php if (has_post_thumbnail() ) : ?>
+                                <a class="popup" href="<?php
+                                $large_image_url = wp_get_attachment_image_src( get_post_thumbnail_id(), 'large' );
+                                echo $large_image_url[0];
+                                ?>" title="<?php the_title_attribute(); ?>">
+                                    <?php the_post_thumbnail(array(220, 220)); ?>
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="col-md-4 col-md-pull-4 animation_2">
-                        <h3>Немного о себе</h3>
-                        <p>Это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов.</p>
-                        <p>Lorem Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация листов Letraset с образцами Lorem Ipsum в 60-х годах и, в более недавнее время, программы электронной вёрстки типа Aldus PageMaker, в шаблонах которых используется Lorem Ipsum.</p>
+                        <h3><?php the_title(); ?></h3>
+                        <?php the_content(); ?>
                     </div>
+                    <?php endwhile; endif; wp_reset_query(); ?>
+                    
+                    
+                    
                     <div class="col-md-4 animation_3 personal_last_block">
-                        <h3>Персональная информация</h3>
-                        <h2 class="personal_header">Ваня Вебдевов</h2>
-                        <ul>
-                            <li>Професиональное создание сайтов: разработка дизайна, HTML верстка, посадка на CMS WordPress</li>
-                            <li>День рождения: 3 июня 1988 года</li>
-                            <li>Номер телефона: +7 777 77 77</li>
-                            <li>E-mail: <a href="mailto:testmail@mail.com"></a>testmail@mail.com</li>
-                            <li>Веб-сайт: <a href="http://google.com" target="blank">google.com</a></li>
-                        </ul>
+                        <?php if ( have_posts() ) : query_posts('p=7');
+                        while (have_posts()) : the_post(); ?>
+                        <h3><?php the_title(); ?></h3>
+                        <h2 class="personal_header"><?php echo get_bloginfo('name'); ?></h2>
+                            <?php the_content(); ?>
+                        <?php endwhile; endif; wp_reset_query(); ?>
                         <div class="social_wrap">
                             <ul>
-                                <li><a href="#" target="blank"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="#" target="blank"><i class="fa fa-vk"></i></a></li>
-                                <li><a href="#" target="blank"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="#" target="blank"><i class="fa fa-github"></i></a></li>
+                                <?php if ( have_posts() ) : query_posts('cat=3');
+                                    while (have_posts()) : the_post(); ?>
+                                <li><a href="<?php echo get_post_meta($post->ID, 'soc_url', true) ?>" target="blank" title="<?php the_title(); ?>"><i class="fa <?php echo get_post_meta($post->ID, 'font_awesome', true) ?>"></i></a></li>
+                                        
+                                        <?php the_content(); ?>
+                                        <?php the_post_thumbnail(array(100, 100)); ?>
+
+                                <?php endwhile; endif; wp_reset_query(); ?>
                             </ul>
                         </div>
                     </div>
@@ -47,53 +65,44 @@
            
     <section id="resume" class="s_resume">
         <div class="section_header">
-            <h2>Резюме</h2>
+            <h2><?php echo get_cat_name(4); ?></h2>
             <div class="s_descr_wrapper">
-                <div class="s_descr">Мои знания и достижения</div>
+                <div class="s_descr"><?php echo category_description(4); ?></div>
             </div>
         </div>
         <div class="section_content">
             <div class="container">
                 <div class="row">
                     <div class="resume_container">
+                        
                         <div class="col-md-6 col-sm-6 left">
-                            <h3>Работа</h3>
+                            <h3><?php echo get_cat_name(5); ?></h3>
                             <div class="resume_icon"><i class="icon-basic-case"></i></div>
+                            
+                            <?php if ( have_posts() ) : query_posts('cat=5');
+                                while (have_posts()) : the_post(); ?>
                             <div class="resume_item">
-                                <div class="year">2008-2015</div>
-                                <div class="resume_description">ООО "Пронькина забава"<strong>Программист</strong></div>
-                                <p>Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов.</p>
+                                <div class="year"><?php echo get_post_meta($post->ID, 'resume_years', true); ?></div>
+                                <div class="resume_description"><?php echo get_post_meta($post->ID, 'resumke_place', true); ?><strong><?php the_title(); ?></strong></div>
+                                <?php the_content(); ?>
                             </div>
-                            <div class="resume_item">
-                                <div class="year">2008-2015</div>
-                                <div class="resume_description">ООО "Пронькина забава"<strong>Программист</strong></div>
-                                <p>Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов.</p>
-                            </div>
-                            <div class="resume_item">
-                                <div class="year">2008-2015</div>
-                                <div class="resume_description">ООО "Пронькина забава"<strong>Программист</strong></div>
-                                <p>Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов.</p>
-                            </div>
+                            <?php endwhile; endif; wp_reset_query(); ?>
                         </div>
+                        
                         <div class="col-md-6 col-sm-6 right">
-                            <h3>Учеба</h3>
+                            <h3><?php echo get_cat_name(6); ?></h3>
                             <div class="resume_icon"><i class="icon-basic-book-pen"></i></div>
+                            
+                            <?php if ( have_posts() ) : query_posts('cat=6');
+                                while (have_posts()) : the_post(); ?>
                             <div class="resume_item">
-                                <div class="year">2008-2015</div>
-                                <div class="resume_description">ООО "Пронькина забава"<strong>Программист</strong></div>
-                                <p>Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов.</p>
+                                <div class="year"><?php echo get_post_meta($post->ID, 'resume_years', true); ?></div>
+                                <div class="resume_description"><strong><?php the_title(); ?></strong><?php echo get_post_meta($post->ID, 'resumke_place', true); ?></div>
+                                <?php the_content(); ?>
                             </div>
-                            <div class="resume_item">
-                                <div class="year">2008-2015</div>
-                                <div class="resume_description">ООО "Пронькина забава"<strong>Программист</strong></div>
-                                <p>Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов.</p>
-                            </div>
-                            <div class="resume_item">
-                                <div class="year">2008-2015</div>
-                                <div class="resume_description">ООО "Пронькина забава"<strong>Программист</strong></div>
-                                <p>Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов.</p>
-                            </div>
+                            <?php endwhile; endif; wp_reset_query(); ?>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -102,9 +111,9 @@
            
     <section id="portfolio" class="s_portfolio bg_dark">
         <div class="section_header">
-            <h2>Портфолио</h2>
+            <h2><?php echo get_cat_name(7); ?></h2>
             <div class="s_descr_wrapper">
-                <div class="s_descr">Мои последние работы</div>
+                <div class="s_descr"><?php echo category_description(7); ?></div>
             </div>
         </div>
         <div class="section_content">
@@ -113,156 +122,53 @@
                    <div class="filter_div controls">
                        <ul>
                            <li class="filter active" data-filter="all">Все работы</li>
-                           <li class="filter" data-filter=".category-1">Сайты</li>
-                           <li class="filter" data-filter=".category-2">Айдентика</li>
-                           <li class="filter" data-filter=".category-3">Логотипы</li>
+                           <li class="filter" data-filter=".sites">Сайты</li>
+                           <li class="filter" data-filter=".identy">Айдентика</li>
+                           <li class="filter" data-filter=".logos">Логотипы</li>
                        </ul>
                    </div>
                     <div id="portfolio_grid">
-                        <div class="mix col-md-3 col-sm-6 col-xs-6 portfolio_item category-1">
-                            <img src="img/portfolio-images/1.jpg" alt="alt">
-                            <div class="port_item_cont">
-                                <h3>Заголовок работы</h3>
-                                <p>Описание работы</p>
-                                <a href="#" class="popup_content">Посмотреть</a>
-                            </div>
-                            <div class="hidden">
-                                <div class="port_descr">
-                                   <div class="modal-box-content">
-                                   <button title="Close (Esc)" type="button" class="mfp-close">×</button>
-                                    <h3>Описание</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, quae ea nulla perferendis corporis. Corrupti quos praesentium voluptatum nihil nam?</p>
-                                    <img src="img/portfolio-images/1.jpg" alt="alt"> 
-                                   </div>
+                        
+                        <?php if ( have_posts() ) : query_posts('cat=7');
+                            while (have_posts()) : the_post(); ?>
+                        
+                            <div class="mix col-md-3 col-sm-6 col-xs-6 portfolio_item <?php
+                                $tags = wp_get_post_tags($post->ID);
+                                    if ($tags) {
+                                            foreach($tags as $tag) {
+                                            echo ' ' . $tag->name;
+                                        }
+                                    }
+                                ?>">
+                                <?php the_post_thumbnail(array(400, 300)); ?>
+                                <div class="port_item_cont">
+                                    <h3><?php the_title(); ?></h3>
+                                    <?php the_excerpt(); ?>
+                                    <a href="#" class="popup_content">Посмотреть</a>
+                                </div>
+                                <div class="hidden">
+                                    <div class="port_descr">
+                                        <div class="modal-box-content">
+                                        <button title="Close (Esc)" type="button" class="mfp-close">×</button>
+                                        <h3><?php the_title(); ?></h3>
+                                        <?php the_content(); ?>
+                                        <img src="<?php
+                                        $large_image_url = wp_get_attachment_image_src( get_post_thumbnail_id(), 'large' );
+                                        echo $large_image_url[0];
+                                        ?>" alt="<?php the_title(); ?>"> 
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="mix col-md-3 col-sm-6 col-xs-6 portfolio_item category-1">
-                            <img src="img/portfolio-images/2.jpg" alt="alt">
-                            <div class="port_item_cont">
-                                <h3>Заголовок работы</h3>
-                                <p>Описание работы</p>
-                                <a href="#" class="popup_content">Посмотреть</a>
-                            </div>
-                            <div class="hidden">
-                                <div class="port_descr">
-                                   <div class="modal-box-content">
-                                   <button title="Close (Esc)" type="button" class="mfp-close">×</button>
-                                    <h3>Описание</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, quae ea nulla perferendis corporis. Corrupti quos praesentium voluptatum nihil nam?</p>
-                                    <img src="img/portfolio-images/2.jpg" alt="alt"> 
-                                   </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mix col-md-3 col-sm-6 col-xs-6 portfolio_item category-1">
-                            <img src="img/portfolio-images/3.jpg" alt="alt">
-                            <div class="port_item_cont">
-                                <h3>Заголовок работы</h3>
-                                <p>Описание работы</p>
-                                <a href="#" class="popup_content">Посмотреть</a>
-                            </div>
-                            <div class="hidden">
-                                <div class="port_descr">
-                                   <div class="modal-box-content">
-                                   <button title="Close (Esc)" type="button" class="mfp-close">×</button>
-                                    <h3>Описание</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, quae ea nulla perferendis corporis. Corrupti quos praesentium voluptatum nihil nam?</p>
-                                    <img src="img/portfolio-images/3.jpg" alt="alt"> 
-                                   </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mix col-md-3 col-sm-6 col-xs-6 portfolio_item category-1">
-                            <img src="img/portfolio-images/4.jpg" alt="alt">
-                            <div class="port_item_cont">
-                                <h3>Заголовок работы</h3>
-                                <p>Описание работы</p>
-                                <a href="#" class="popup_content">Посмотреть</a>
-                            </div>
-                            <div class="hidden">
-                                <div class="port_descr">
-                                   <div class="modal-box-content">
-                                   <button title="Close (Esc)" type="button" class="mfp-close">×</button>
-                                    <h3>Описание</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, quae ea nulla perferendis corporis. Corrupti quos praesentium voluptatum nihil nam?</p>
-                                    <img src="img/portfolio-images/4.jpg" alt="alt"> 
-                                   </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mix col-md-3 col-sm-6 col-xs-6 portfolio_item category-2">
-                            <img src="img/portfolio-images/5.jpg" alt="alt">
-                            <div class="port_item_cont">
-                                <h3>Заголовок работы</h3>
-                                <p>Описание работы</p>
-                                <a href="#" class="popup_content">Посмотреть</a>
-                            </div>
-                            <div class="hidden">
-                                <div class="port_descr">
-                                   <div class="modal-box-content">
-                                   <button title="Close (Esc)" type="button" class="mfp-close">×</button>
-                                    <h3>Описание</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, quae ea nulla perferendis corporis. Corrupti quos praesentium voluptatum nihil nam?</p>
-                                    <img src="img/portfolio-images/5.jpg" alt="alt"> 
-                                   </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mix col-md-3 col-sm-6 col-xs-6 portfolio_item category-2">
-                            <img src="img/portfolio-images/6.jpg" alt="alt">
-                            <div class="port_item_cont">
-                                <h3>Заголовок работы</h3>
-                                <p>Описание работы</p>
-                                <a href="#" class="popup_content">Посмотреть</a>
-                            </div>
-                            <div class="hidden">
-                                <div class="port_descr">
-                                   <div class="modal-box-content">
-                                   <button title="Close (Esc)" type="button" class="mfp-close">×</button>
-                                    <h3>Описание</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, quae ea nulla perferendis corporis. Corrupti quos praesentium voluptatum nihil nam?</p>
-                                    <img src="img/portfolio-images/6.jpg" alt="alt"> 
-                                   </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mix col-md-3 col-sm-6 col-xs-6 portfolio_item category-2">
-                            <img src="img/portfolio-images/1.jpg" alt="alt">
-                            <div class="port_item_cont">
-                                <h3>Заголовок работы</h3>
-                                <p>Описание работы</p>
-                                <a href="#" class="popup_content">Посмотреть</a>
-                            </div>
-                            <div class="hidden">
-                                <div class="port_descr">
-                                   <div class="modal-box-content">
-                                   <button title="Close (Esc)" type="button" class="mfp-close">×</button>
-                                    <h3>Описание</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, quae ea nulla perferendis corporis. Corrupti quos praesentium voluptatum nihil nam?</p>
-                                    <img src="img/portfolio-images/1.jpg" alt="alt"> 
-                                   </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mix col-md-3 col-sm-6 col-xs-6 portfolio_item category-3">
-                            <img src="img/portfolio-images/2.jpg" alt="alt">
-                            <div class="port_item_cont">
-                                <h3>Заголовок работы</h3>
-                                <p>Описание работы</p>
-                                <a href="#" class="popup_content">Посмотреть</a>
-                            </div>
-                            <div class="hidden">
-                                <div class="port_descr">
-                                   <div class="modal-box-content">
-                                   <button title="Close (Esc)" type="button" class="mfp-close">×</button>
-                                    <h3>Описание</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, quae ea nulla perferendis corporis. Corrupti quos praesentium voluptatum nihil nam?</p>
-                                    <img src="img/portfolio-images/2.jpg" alt="alt"> 
-                                   </div>
-                                </div>
-                            </div>
-                        </div>    
+
+                                
+                                
+                                
+
+                        <?php endwhile; endif; wp_reset_query(); ?>
+                        
+                        
+                        
                     </div>
                 </div>
             </div>
@@ -320,4 +226,4 @@
             </div>
         </div>
     </section>
-<?php get_footer()?>
+<?php get_footer(); ?>

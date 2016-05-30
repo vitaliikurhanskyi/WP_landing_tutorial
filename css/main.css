@@ -278,6 +278,7 @@ svg {
   margin-bottom: 35px; }
   .person img {
     max-width: 220px;
+    max-height: 220px;
     display: inline-block;
     border-radius: 50%; }
 
@@ -360,7 +361,8 @@ svg {
   display: none;
   padding: 0; }
   .portfolio_item img {
-    width: 100%; }
+    width: 100%;
+    height: auto;}
   .portfolio_item .port_item_cont {
     position: absolute;
     top: 0;
